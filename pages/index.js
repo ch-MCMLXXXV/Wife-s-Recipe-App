@@ -4,8 +4,8 @@ import axios from 'axios';
 import styles from '../styles/Home.module.css';
 
 export default function Home() {
-   const [keyword, setKeyword] = useState('');
-   const [diet, setDiet] = useState('');
+   const [keyword, setKeyword] = useState(null);
+   let [diet, setDiet] = useState(null);
    const [exclude, setExclude] = useState(null);
    const [intolerances, setIntolerances] = useState(null);
    const [response, setResponse] = useState(null);
@@ -13,7 +13,7 @@ export default function Home() {
 
    const getRecipes = async () => {
       try {
-         diet === 'none' ? diet == '' : null;
+         diet === 'none' ? (diet = '') : null;
          setLoading(true);
          const res = await axios.get('api/search/', {
             params: {
@@ -65,27 +65,14 @@ export default function Home() {
                      {' '}
                      Diet
                   </label>
-                  <select
-                     className=' mt-1 flex w-full rounded-lg px-5 py-3 text-base text-background font-bold focus:outline-none'
+                  <input
+                     className='mt-1 w-full rounded-lg px-5 py-3 text-base text-background font-bold focus:outline-none '
+                     type='text'
+                     placeholder='Primal'
                      onChange={(e) => {
                         setDiet(e.target.value);
                      }}
-                  >
-                     {[
-                        'none',
-                        'vegetarian',
-                        'vegan',
-                        'ovo vegetarian',
-                        'lacto vegetarian',
-                        'pescetarian',
-                     ].map((diet) => {
-                        return (
-                           <option key={diet} value={diet}>
-                              {diet}
-                           </option>
-                        );
-                     })}
-                  </select>
+                  ></input>
                </div>
                <div className=' sm:ml-10 sm:w-1/3 w-full'>
                   <label className=' block text-primary text-sm'>
@@ -122,7 +109,7 @@ export default function Home() {
             </button>
          </form>
          {response && (
-            <div classname='mt=10'>
+            <div className='mt=10'>
                <div className='mt-6 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3'>
                   {response.map((recipe) => (
                      <div key={recipe.id} className='pt-6'>
@@ -131,8 +118,10 @@ export default function Home() {
                               <div className=' flex items-center justify-center'>
                                  <span className=' p-2'>
                                     <Image
+                                       width={600}
+                                       height={600}
                                        src={
-                                          `http://spoonacular.com/recipeImages/` +
+                                          `https://spoonacular.com/recipeImages/` +
                                           recipe.image
                                        }
                                        className=' w-full h-full rounded-lg'
@@ -147,7 +136,8 @@ export default function Home() {
                                  <span className=' mt-2 text-sm text-secondary block'>
                                     Ready in {recipe.readyInMinutes}
                                     {''}
-                                    minutes - {recipe.servings}
+                                    minutes -{''}
+                                    {recipe.servings}
                                     {''}
                                     Servings
                                  </span>
